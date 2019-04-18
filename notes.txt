@@ -1,0 +1,8 @@
+Classes :
+
+Categorie : enum
+Produit : attr(nom:str,prix:double,categorie)
+Ticket : attr(date,*utilisateur,map<*produit,quantite:int>)
+Utilisateur : attr(prenom:str,nom:str)
+
+Il faut pas mettre de constructor (ou ctor vide) pour les classes PHP
