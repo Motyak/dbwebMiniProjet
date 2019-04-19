@@ -1,10 +1,11 @@
 <?php
+include("classes.php");
 include("connexion.php");
-$req=$pdo->prepare("select produits.id,produits.nom,categories.nom as categorie,produits.prix
-    from ticket_entry inner join produits on ticket_entry.produit_id=produits.id 
-    inner join categories on produits.categorie_id=categories.id 
-    where ticket_entry.ticket_id=" . $_GET['id'] . " group by categories.nom,produits.prix,produits.nom,produits.id");
-$req->execute();
+$req=$pdo->query("select produits.id,produits.nom,categories.nom as categorie,produits.prix
+    from ticket_entry join produits on ticket_entry.produit_id=produits.id 
+	join categories on produits.categorie_id=categories.id 
+	where ticket_entry.ticket_id=" . $_GET['id'] . " group by categories.nom,produits.prix,produits.nom,produits.id");
+$req->setFetchMode(PDO::FETCH_CLASS,'Produit');
 $tab=$req->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -59,23 +60,19 @@ $(document).ready(function(){
                 <th>PRIX</th>
 			</tr>
 		</thead>
+		<?php 
+		foreach($tab as $produit)
+		{
+			//colonne1 : id
+			echo "<tr>\n\t\t\t<td>",$produit->getId(),
+			//colonne2 : nom
+			"</td>\n\t\t\t<td>",$produit->getNom(),
+			//colonne3 : categorie
+			"</td>\n\t\t\t<td>",$produit->getCategorie(),
+			//colonne4 : prix
+			"</td>\n\t\t\t<td>",$produit->getPrix(),"\n\t\t\t</td>\n\t\t</tr>\n\t\t";
+		}
+		?>
 	</table>
 </body>
-<script>
-var table=document.getElementById("produits");
-var tab=<?php echo json_encode($tab);?>;
-
-for(var i=0;i<tab.length;++i)
-{
-	var row=table.insertRow(i+1);
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-	cell1.innerHTML = tab[i][0];
-	cell2.innerHTML = tab[i][1];
-    cell3.innerHTML = tab[i][2];
-    cell4.innerHTML = tab[i][3];
-}
-</script>
 </html>

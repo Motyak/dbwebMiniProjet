@@ -1,9 +1,10 @@
 <?php
+include("classes.php");
 include("connexion.php");
-$req=$pdo->prepare("select tickets.id,tickets.date 
-    from tickets inner join utilisateurs on tickets.utilisateur_id=utilisateurs.id 
-    where utilisateurs.id=" . $_GET['id'] . " order by date desc");
-$req->execute();
+$req=$pdo->query("select tickets.id,date
+    from tickets join utilisateurs on tickets.utilisateur_id=utilisateurs.id 
+	where utilisateurs.id=" . $_GET['id'] . " order by date desc");
+$req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
 $tab=$req->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -32,27 +33,22 @@ $tab=$req->fetchAll();
 			<tr>
 				<th>ID</th>
 				<th>DATE</th>
-                <th></th>
 			</tr>
 		</thead>
+		<?php 
+		foreach($tab as $ticket)
+		{
+			//colonne1 : id
+			echo "<tr>\n\t\t\t<td>",$ticket->getId(),
+			//colonne2 : date
+			"</td>\n\t\t\t<td>",$ticket->getDate(),
+			//colonne3 : bouton 'show tickets'
+			"</td>\n\t\t\t<td>\n\t\t\t\t<form method='get' action='produits.php'>",
+			"\n\t\t\t\t\t<input type='hidden' name='id' value='",$ticket->getId(),"'>",
+			"\n\t\t\t\t\t<button type='submit'>Show products</button>\n\t\t\t\t</form>",
+			"\n\t\t\t</td>\n\t\t</tr>\n\t\t";
+		}
+		?>
 	</table>
 </body>
-<script>
-var table=document.getElementById("tickets");
-var tab=<?php echo json_encode($tab);?>;
-
-for(var i=0;i<tab.length;++i)
-{
-	var row=table.insertRow(i+1);
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-	cell1.innerHTML = tab[i][0];
-	cell2.innerHTML = tab[i][1];
-    cell3.innerHTML = "<form method='get' action='produits.php'>\
-	<input type='hidden' name='id' value='" + tab[i][0].toString() + "'>\
-	<button type='submit'>Show products</button>\
-	</form>";
-}
-</script>
 </html>

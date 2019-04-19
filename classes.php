@@ -129,10 +129,10 @@ class Ticket
 	public function setId($id){$this->id=$id;}
 	public function getDate(){return $this->date;}
 	public function getUtilisateur(){return $this->utilisateur;}
-	public function getProduits(){return $this->produits;}
+	// public function getProduits(){return $this->produits;}
 	public function setDate($date){$this->date=$date;}
 	public function setUtilisateur($utilisateur){$this->utilisateur=$utilisateur;}
-	public function setProduits($produits){$this->produits=$produits;}
+	// public function setProduits($produits){$this->produits=$produits;}
 }
 
 // $c=new Categorie();
