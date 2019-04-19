@@ -12,6 +12,27 @@ $tab=$req->fetchAll();
 <head>
 <title>TICKETS</title>
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+    var i=0;
+
+    var colPrix=$('#number').val()
+    $('td:nth-child(3),th:nth-child(3)').hide();
+
+    $("#btnDetails").click(function(){ 
+        $('td:nth-child(3),th:nth-child(3)').toggle();
+        if(i%2==0)
+            $("#btnDetails").text("Masquer détails");
+        else
+            $("#btnDetails").text("Afficher détails");
+        i++;
+    });
+
+});
+</script>
 <style>
 	table {
   	border-collapse: collapse;
@@ -21,18 +42,20 @@ $tab=$req->fetchAll();
 	th, td {
   	text-align: left;
   	padding: 8px;
-  	text-align:center;
+  	/* text-align:center; */
 	}
 
 	tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
+	<button type="button" id="btnDetails" style="float: right;">Afficher détails</button>
 	<table id="tickets">
 		<thead>
 			<tr>
 				<th>ID</th>
 				<th>DATE</th>
+				<th>PRODUITS</th>
 			</tr>
 		</thead>
 		<?php 
@@ -42,10 +65,36 @@ $tab=$req->fetchAll();
 			echo "<tr>\n\t\t\t<td>",$ticket->getId(),
 			//colonne2 : date
 			"</td>\n\t\t\t<td>",$ticket->getDate(),
-			//colonne3 : bouton 'show tickets'
-			"</td>\n\t\t\t<td>\n\t\t\t\t<form method='get' action='produits.php'>",
-			"\n\t\t\t\t\t<input type='hidden' name='id' value='",$ticket->getId(),"'>",
-			"\n\t\t\t\t\t<button type='submit'>Show products</button>\n\t\t\t\t</form>",
+			//colonne3 : produits
+			"</td>\n\t\t\t<td>";
+			$req=$pdo->query("select produits.id,produits.nom,categories.nom as categorie,produits.prix
+    			from ticket_entry join produits on ticket_entry.produit_id=produits.id 
+				join categories on produits.categorie_id=categories.id 
+				where ticket_entry.ticket_id=" . $ticket->getId() . " group by categories.nom,produits.prix,produits.nom,produits.id");
+			$req->setFetchMode(PDO::FETCH_CLASS,'Produit');
+			$produits=$req->fetchAll();
+			echo "\n\t\t\t\t<ul>";
+			$total=0;
+			foreach($produits as $produit)
+			{
+				$quantite=TicketEntry::getQuant($ticket->getId(),$produit->getId());
+				$prix=$quantite*$produit->getPrix();
+				echo "\n\t\t\t\t<li>",
+				//quantite
+				$quantite,"x ",
+				//nom
+				$produit->getNom()," à ",
+				//prix unitaire
+				$produit->getPrix(),"€	",
+				//prix
+				number_format($prix, 2, '.', ''),"€",
+				"</li>";
+
+				$total+=$prix;
+			}
+			echo "\n\t\t\t\t</ul>",
+			//total
+			"\n\t\t\t\tTotal : ",number_format($total,2,'.',''),"€",
 			"\n\t\t\t</td>\n\t\t</tr>\n\t\t";
 		}
 		?>

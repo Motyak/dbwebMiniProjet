@@ -16,8 +16,8 @@ class Categorie
 	// 	include("connexion.php");
 	// 	$req=$pdo->query("select nom from categories where id=" . $id);
 	// 	$req->setFetchMode(PDO::FETCH_CLASS,'Categorie');
-	// 	$tmp=$req->fetch();
-	// 	$this->nom=$tmp->getNom();
+	// 	$res=$req->fetch();
+	// 	$this->nom=$res->getNom();
 	// }
 	
 	public function getId(){return $this->id;}
@@ -43,10 +43,10 @@ class Utilisateur
 	// 	include("connexion.php");
 	// 	$req=$pdo->query("select nom,prenom from utilisateurs where id=" . $id);
 	// 	$req->setFetchMode(PDO::FETCH_CLASS,'Utilisateur');
-	// 	$tmp=$req->fetch();
-	// 	//var_dump($tmp);
-	// 	$this->nom=$tmp->getNom();
-	// 	$this->prenom=$tmp->getPrenom();
+	// 	$res=$req->fetch();
+	// 	//var_dump($res);
+	// 	$this->nom=$res->getNom();
+	// 	$this->prenom=$res->getPrenom();
 	// }
 	
 	public function getId(){return $this->id;}
@@ -66,7 +66,7 @@ class Produit
 	
 	public function __toString()
 	{
-		return '(' . $this->id . ';' . $this->nom . ';' . $this->prix . ';' . $this->categorie . ')';
+		return $this->id . ' | ' . $this->nom . ' | ' . $this->prix . '€ | ' . $this->categorie;
 	}
 	
 	// public function importFromPersi($id)
@@ -75,13 +75,13 @@ class Produit
 	// 	include("connexion.php");
 	// 	$req=$pdo->query("select nom,prix,categorie_id as categorie from produits where id=" . $id);
 	// 	$req->setFetchMode(PDO::FETCH_CLASS,'Produit');
-	// 	$tmp=$req->fetch();
-	// 	$this->nom=$tmp->getNom();
-	// 	$this->prix=$tmp->getPrix();
+	// 	$res=$req->fetch();
+	// 	$this->nom=$res->getNom();
+	// 	$this->prix=$res->getPrix();
 		
-	// 	$tmp2=new Categorie();
-	// 	$tmp2->importFromPersi($tmp->getCategorie());
-	// 	$this->categorie=$tmp2->getNom();
+	// 	$res2=new Categorie();
+	// 	$res2->importFromPersi($res->getCategorie());
+	// 	$this->categorie=$res2->getNom();
 	// }
 	
 	public function getId(){return $this->id;}
@@ -105,6 +105,26 @@ class TicketEntry
 	{
 		return '(' . $this->id . ';' . $this->ticket . ';' . $this->produit . ';' . $this->quantite . ')';
 	}
+
+	static function getQuant($idTicket,$idProduit)
+	{
+		include("connexion.php");
+		$req=$pdo->prepare("select quantite from ticket_entry 
+			where ticket_id=" . $idTicket . " and produit_id=" . $idProduit);
+		$req->execute();
+		$res=$req->fetch();
+		return $res[0];
+	}
+
+	public function getId(){return $this->id;}
+	public function setId($id){$this->id=$id;}
+	public function getTicket(){return $this->ticket;}
+	public function setTicket($ticket){$this->ticket=$ticket;}
+	public function getProduit(){return $this->produit;}
+	public function setProduit($produit){$this->produit=$produit;}
+	public function getQuantite(){return $this->quantite;}
+	public function setQuantite($quantite){$this->quantite=$quantite;}
+
 }
 
 class Ticket
