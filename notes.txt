@@ -6,3 +6,47 @@ Ticket : attr(date,*utilisateur,map<*produit,quantite:int>)
 Utilisateur : attr(prenom:str,nom:str)
 
 Il faut pas mettre de constructor (ou ctor vide) pour les classes PHP
+
+La classe TicketEntry ne sert à rien ?
+On ne stocke pas les produits dans un ticket ? (un ticket est défini par
+    un id, une date, un id_utilisateur)
+
+On ne stocke pas d'objets dans des objets, on stocke les id a la limite (seulement 
+    lorsque nécessaire)
+
+Ne pas passer par javascript pour la création du tableau HTML, faire directement un 
+    foreach php et appeler les accesseurs
+_____________________________________
+
+Pour les Categories, on fera un fetch class 'String' (ou alors pas besoin de fetch class ?)
+De meme, dans la classe produit, la categorie sera un String.
+
+Toutes les classes auront un attribut id.
+
+Plus de méthodes (statiques) pour importer des objets depuis la BDD.
+    On fera au pire une classe fait exprès, générique (si besoin)
+
+
+Pour utiliser des liens comme 'submit form' => appliquer ce style CSS aux boutons 'link' :
+button[name=link]{
+     background:none!important;
+     color:inherit;
+     border:none; 
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     border-bottom:1px solid #444; 
+     cursor: pointer;
+}
+https://stackoverflow.com/questions/1367409/how-to-make-button-look-like-a-link
+
+Pour faire une saisie de prix dans la modal 'modifier' ou 'ajouter' dans produits.php =>
+<input type="number" min="0.00" max="10000.00" step="0.01" />
+https://stackoverflow.com/questions/24163889/html5-input-for-money-currency
+
+Dans les modals, mettre le bouton 'Appliquer' en autofocus :
+<button type="button" autofocus>test</button>
+https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_button_autofocus
+
+Pour griser un element HTML : ajouter attribut HTML : 'disabled'
+
