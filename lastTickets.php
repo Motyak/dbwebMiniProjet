@@ -1,8 +1,18 @@
 <?php
 include("classes.php");
 include("connexion.php");
-$req=$pdo->query("select id,date from tickets
-	where utilisateur_id=" . $_GET['id'] . " order by date desc");
+if($_GET['type']=="produit")
+    $req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
+        join ticket_entry on ticket_entry.ticket_id=tickets.id 
+        join produits on produits.id=ticket_entry.produit_id 
+        where produits.id=" . $_GET['id'] ." order by date desc limit 3");
+else if($_GET['type']=="categorie")
+    $req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
+        join ticket_entry on ticket_entry.ticket_id=tickets.id 
+        join produits on produits.id=ticket_entry.produit_id
+        join categories on categories.id=categorie_id
+        where categories.nom='" . $_GET['id'] ."' order by date desc limit 3");
+
 $req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
 $tab=$req->fetchAll();
 ?>
