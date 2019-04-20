@@ -1,6 +1,48 @@
 <?php
 include("classes.php");
 include("connexion.php");
+
+if(isset($_POST['id']) && isset($_POST['nom']) && isset($_POST['categorie']) 
+    && isset($_POST['prix']))
+{
+    $req=$pdo->prepare("select count(id) from produits where id=" . $_POST['id']);
+    $req->execute();
+    $idExistant=$req->fetch()[0];
+    if($idExistant==0)
+    {
+        //creation
+        //insert into produits values(id,nom,prix,categorie_id)
+        try{
+            $pdo->beginTransaction();
+            $pdo->query("insert into produits values(" . $_POST['id'] . ",'" . 
+                $_POST['nom'] . "'," . $_POST['prix'] . "," . $_POST['categorie'] . ")");
+            $pdo->commit();
+        }
+        catch(Exception $e){
+            $pdo->rollback();
+            echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
+            exit();
+        }
+    }
+    else
+    {
+        //modification
+        //update produits set nom=nom,prix=prix,categorie_id=categorie where id=id
+        try{
+            $pdo->beginTransaction();
+            $pdo->query("update produits set nom='" . $_POST['nom'] . 
+                "',prix=" . $_POST['prix'] . ",categorie_id=" . $_POST['categorie'] . 
+                " where id=" . $_POST['id']);
+            $pdo->commit();
+        }
+        catch(Exception $e){
+            $pdo->rollback();
+            echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
+            exit();
+        }
+    }
+}
+
 $req=$pdo->query("select produits.id,produits.nom,produits.prix,
     categories.nom as categorie from produits 
     join categories on produits.categorie_id=categories.id 
@@ -99,7 +141,7 @@ $tab=$req->fetchAll();
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
-        <form action="login.php">
+        <form method="post">
         <div class="container">
             <label for="lblId"><b>ID :</b></label>
             <input type="number" min="0" max="9999" placeholder="Ex: 7" name="id" required>
@@ -111,16 +153,16 @@ $tab=$req->fetchAll();
             <select name="categorie" required>
             <option disabled selected value> -- choisissez -- </option>
             <?php
-            $req=$pdo->query("select nom from categories order by nom asc");
+            $req=$pdo->query("select id,nom from categories order by nom asc");
             $req->setFetchMode(PDO::FETCH_CLASS,'Categorie');
             $categories=$req->fetchAll();
             foreach($categories as $categorie)
-                echo "<option value='",$categorie->getNom(),"'>",$categorie->getNom(),"</option>\n\t\t\t";
+                echo "<option value='",$categorie->getId(),"'>",$categorie->getNom(),"</option>\n\t\t\t";
             ?>
             </select>
             <div class="divider"></div>
             <label for="lblPrix"><b>Prix :</b></label>
-            <input type="number" name="prix" min="0.00" max="10000.00" step="0.01" placeholder="Ex: 4.99" required>€<br><br>
+            <input type="number" name="prix" min="0.00" max="10000.00" step="0.01" placeholder="Ex: 4,99" required>€<br><br>
 
             <div style="text-align: center;"><button type="submit">Confirmer</button></div>
         </div>
