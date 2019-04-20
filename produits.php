@@ -58,7 +58,7 @@ $tab=$req->fetchAll();
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 50%; /* Could be more or less, depending on screen size */
+    width: 40%; /* Could be more or less, depending on screen size */
     }
 
     /* The Close Button */
@@ -77,11 +77,21 @@ $tab=$req->fetchAll();
     } 
 
     .divider{
-    width:15px;
+    /* width:15px; */
+    width:10%;
     height:auto;
     display:inline-block;
     }
 
+    input[name=id]{
+    width:50px;
+    }
+    input[name=prix]{
+    width:65px;
+    }
+    input[name=nom]{
+    width:100px;
+    }
 </style>
 </head>
 <body>
@@ -92,10 +102,10 @@ $tab=$req->fetchAll();
         <form action="login.php">
         <div class="container">
             <label for="lblId"><b>ID :</b></label>
-            <input type="text" placeholder="Ex : 7" name="id" required>
+            <input type="number" min="0" max="9999" placeholder="Ex: 7" name="id" required>
             <div class="divider"></div>
             <label for="lblNom"><b>Nom :</b></label>
-            <input type="text" placeholder="Ex : Tournevis" name="nom" required><br><br>
+            <input type="text" maxlength="16" placeholder="Ex: Tournevis" name="nom" required><br><br>
 
             <label for="lblCategorie"><b>Categorie :</b></label>
             <select name="categorie" required>
@@ -105,14 +115,12 @@ $tab=$req->fetchAll();
             $req->setFetchMode(PDO::FETCH_CLASS,'Categorie');
             $categories=$req->fetchAll();
             foreach($categories as $categorie)
-            {
                 echo "<option value='",$categorie->getNom(),"'>",$categorie->getNom(),"</option>\n\t\t\t";
-            }
             ?>
             </select>
             <div class="divider"></div>
             <label for="lblPrix"><b>Prix :</b></label>
-            <input type="number" min="0.00" max="10000.00" step="0.01" placeholder="Ex : 10.00" required>€<br><br>
+            <input type="number" name="prix" min="0.00" max="10000.00" step="0.01" placeholder="Ex: 4.99" required>€<br><br>
 
             <div style="text-align: center;"><button type="submit">Confirmer</button></div>
         </div>
