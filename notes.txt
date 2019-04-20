@@ -49,4 +49,14 @@ Dans les modals, mettre le bouton 'Appliquer' en autofocus :
 https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_button_autofocus
 
 Pour griser un element HTML : ajouter attribut HTML : 'disabled'
+____________________________________________
 
+une page clients (accessible que par un admin)
+une page tickets (accessible que depuis clients ou Mes tickets)
+une page lastTickets (accessible que depuis produits)
+une page produits (accessible que par un admin)
+
+une page d'accueil pour se log + redirection vers tickets.php, menu pour accéder à tickets et produits
+	(si admin)
+
+Si on est pas connecté, menu avec seulement accueil.
