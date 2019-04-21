@@ -1,4 +1,28 @@
 <?php
+include("classes.php");
+include("connexion.php");
+
+if(isset($_POST['uname']) && isset($_POST['pwd']))
+{
+    //pour la requete, contraint de faire un cast int pour le mot de passe sinon req ne fonctionne pas
+    $req=$pdo->query("select id,prenom,nom from utilisateurs 
+        where nom='" . $_POST['uname'] . "' and id=" . (int)$_POST['pwd']);
+    $req->setFetchMode(PDO::FETCH_CLASS,'Utilisateur');
+    $user=$req->fetchAll();
+    
+    if(sizeof($user)==0)
+    {
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?authErr');
+        die;
+    }
+    else
+    {
+        $delay=time()+60*60*24;    //24h
+        setcookie("user",json_encode($user),$delay);
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        die;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -60,13 +84,13 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-     <form action="login.php">
+     <form method="post">
      <div style="text-align: center;"><div class="container">
         <label for="uname"><b>Nom d'utilisateur : </b></label>
-        <input type="text" placeholder="Entrez nom d'utilisateur" name="username" required><br><br>
+        <input type="text" placeholder="Entrez nom d'utilisateur" name="uname" required><br><br>
 
         <label for="psw"><b>Mot de passe : </b></label>
-        <input type="password" placeholder="Entrez mot de passe" name="password" required><br><br>
+        <input type="password" placeholder="Entrez mot de passe" name="pwd" required><br><br>
 
         <button type="submit">Login</button>
          </div></div>
@@ -75,7 +99,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   </div> 
 
 <body>
-
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card w3-left-align w3-large">
@@ -98,11 +121,17 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-bonjour
+    test
   </div>
 </div>
 </body>
 <script>
+
+<?php 
+if(isset($_GET['authErr'])) 
+    echo "alert('Erreur d\'authentification');"; 
+?>
+
 // Get the modal
 var modal = document.getElementById('myModal');
 

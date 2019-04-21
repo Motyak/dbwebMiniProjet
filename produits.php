@@ -5,6 +5,7 @@ include("connexion.php");
 if(isset($_POST['id']) && isset($_POST['nom']) && isset($_POST['categorie']) 
     && isset($_POST['prix']))
 {
+    //ajout d'un produit
     $req=$pdo->prepare("select count(id) from produits where id=" . $_POST['id']);
     $req->execute();
     $idExistant=$req->fetch()[0];

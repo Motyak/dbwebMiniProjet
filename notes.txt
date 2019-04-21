@@ -60,3 +60,21 @@ une page d'accueil pour se log + redirection vers tickets.php, menu pour accéde
 	(si admin)
 
 Si on est pas connecté, menu avec seulement accueil.
+
+index : if isset =>afficher tous les elements du menu, bouton deconnecter,enlever bouton login
+sur toutes les pages : if isset => afficher les elements du menu.
+sur toutes les pages sauf index : if non isset => rediriger vers index.php
+cookie d'une durée de 10 min., login méthode post
+
+Dans le cookie on va stocker l'utilisateur entier sous format JSON,
+    traitement comme tableau associatif
+____________________________________________
+Ce qui reste a faire :
+-Quand cookie present, afficher les bonnes infos sur chaque page
+    (non connecté,connecté pas admin,connecté admin)
+-A l'inverse, rediriger vers accueil si pas de cookie
+-Prevoir bouton deconnexion sur chaque page, redirection accueil apres la deco
+
+-Toute la partie JQuery
+
+-Adapter affichage pour grand moniteur et smartphone

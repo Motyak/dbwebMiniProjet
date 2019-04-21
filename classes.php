@@ -154,23 +154,4 @@ class Ticket
 	public function setUtilisateur($utilisateur){$this->utilisateur=$utilisateur;}
 	// public function setProduits($produits){$this->produits=$produits;}
 }
-
-// $c=new Categorie();
-// $c->importFromPersi(3);
-// print("$c<br>");
-
-// $u=new Utilisateur();
-// $u->importFromPersi(1500);
-// print("$u<br>");
-
-// $p=new Produit();
-// $p->importFromPersi(8);
-// print("$p<br>");
-
-//$t=new Ticket();
-//$t->importFromPersi(3985);
-//print("$t<br>");
-
-
-
 ?>
