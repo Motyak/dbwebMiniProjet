@@ -1,10 +1,18 @@
 <?php
 include("classes.php");
 include("connexion.php");
-$req=$pdo->query("select id,date from tickets
-	where utilisateur_id=" . $_GET['id'] . " order by date desc");
-$req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
-$tab=$req->fetchAll();
+if(isset($_COOKIE['auth']) && isset($_GET['id']) && ($_GET['id']==$_COOKIE['id'] || $_COOKIE['is_admin']==true))
+{
+	$req=$pdo->query("select id,date from tickets
+		where utilisateur_id=" . $_GET['id'] . " order by date desc");
+	$req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
+	$tab=$req->fetchAll();
+}
+else
+{
+	header('Location: index.php');
+  die;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -60,9 +68,18 @@ $(document).ready(function(){
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card w3-left-align w3-large">
     <a href="index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Accueil</a>
-    <a href="tickets.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>
-    <a href="clients.php" class="w3-bar-item w3-button w3-padding-large w3-white">Clients</a>
-    <a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>
+		<?php
+		if($_GET['id']==$_COOKIE['id'])
+			echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-padding-large w3-white">Mes tickets</a>';
+		else
+			echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>';
+    if($_COOKIE['is_admin']==true)
+    {
+        echo '<a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>';
+        echo '<a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>';
+		}
+		?>
+		<a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>
   </div>
 </div>
 

@@ -5,7 +5,7 @@ include("connexion.php");
 if(isset($_POST['uname']) && isset($_POST['pwd']))
 {
     //pour la requete, contraint de faire un cast int pour le mot de passe sinon req ne fonctionne pas
-    $req=$pdo->query("select id,prenom,nom from utilisateurs 
+    $req=$pdo->query("select id,prenom,nom,is_admin from utilisateurs 
         where nom='" . $_POST['uname'] . "' and id=" . (int)$_POST['pwd']);
     $req->setFetchMode(PDO::FETCH_CLASS,'Utilisateur');
     $user=$req->fetchAll();
@@ -18,16 +18,39 @@ if(isset($_POST['uname']) && isset($_POST['pwd']))
     else
     {
         $delay=time()+60*60*24;    //24h
-        setcookie("user",json_encode($user),$delay);
+        setcookie("id",$user[0]->getId(),$delay);
+        setcookie("nom",$user[0]->getNom(),$delay);
+        setcookie("prenom",$user[0]->getPrenom(),$delay);
+        setcookie("is_admin",$user[0]->getIsAdmin(),$delay);
+        setcookie("auth",true,$delay);
         header('Location: ' . $_SERVER['PHP_SELF']);
         die;
     }
+}
+
+if(isset($_GET['logout']))
+{
+    if(isset($_COOKIE['auth']))
+    {
+      unset($_COOKIE["id"]);
+      setcookie("id","",time()-3600);
+      unset($_COOKIE["nom"]);
+      setcookie("nom","",time()-3600);
+      unset($_COOKIE["prenom"]);
+      setcookie("prenom","",time()-3600);
+      unset($_COOKIE["is_admin"]);
+      setcookie("is_admin","",time()-3600);
+      unset($_COOKIE["auth"]);
+      setcookie("auth","",time()-3600);
+    }
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    die;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-<title>Mon site perso</title>
+<title>ACCUEIL</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -104,6 +127,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   <div class="w3-bar w3-black w3-card w3-left-align w3-large">
     <a href="index.php" class="w3-bar-item w3-button w3-padding-large w3-white">Accueil</a>
     <?php
+    if(isset($_COOKIE['auth']))
+    {
+      echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>';
+      if($_COOKIE['is_admin']==true)
+      {
+        echo '<a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>';
+        echo '<a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>';
+      }
+      echo '<a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>';
+    }
     ?>
     <!-- <a href="page1.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Page 1</a> -->
   </div>
@@ -113,15 +146,17 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <!-- <header class="w3-container w3-red w3-center" style="padding:128px 16px"> -->
 <header class="w3-container w3-red w3-center" style="padding:128px 16px">
   <h1 class="w3-margin w3-jumbo">Mon site perso</h1>
-    <!-- Trigger/Open The Modal -->
-  <button id="btnLogin" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Log in</button>
+  <?php
+  if(!isset($_COOKIE['nom']))
+    echo '<button id="btnLogin" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Log in</button>';
+  ?>
 
 </header>
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-    test
+  <?php if(isset($_COOKIE['auth'])) echo 'Bienvenue ',$_COOKIE['nom'],' !'; ?>
   </div>
 </div>
 </body>

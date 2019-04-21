@@ -67,13 +67,13 @@ sur toutes les pages sauf index : if non isset => rediriger vers index.php
 cookie d'une durée de 10 min., login méthode post
 
 Dans le cookie on va stocker l'utilisateur entier sous format JSON,
-    traitement comme tableau associatif
+    traitement comme tableau associatif => MARCHE PAS json_encode retourne {}
+
+Rediriger vers ?logout si l'utilisateur clique sur Logout
+
+Je comprends pas pourquoi ca prend autant de temps pour charger la page 'Mes tickets'
 ____________________________________________
 Ce qui reste a faire :
--Quand cookie present, afficher les bonnes infos sur chaque page
-    (non connecté,connecté pas admin,connecté admin)
--A l'inverse, rediriger vers accueil si pas de cookie
--Prevoir bouton deconnexion sur chaque page, redirection accueil apres la deco
 
 -Toute la partie JQuery
 

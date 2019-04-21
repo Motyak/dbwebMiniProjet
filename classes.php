@@ -31,10 +31,11 @@ class Utilisateur
 	private $id;
 	private $nom;	//str
 	private $prenom;	//str
+	private $is_admin;	//bool
 	
 	public function __toString()
 	{
-		return '(' . $this->id . ';' . $this->nom . ';' . $this->prenom . ')';
+		return '(' . $this->id . ';' . $this->nom . ';' . $this->prenom . ';' . $this->is_admin . ')';
 	}
 	
 	// public function importFromPersi($id)
@@ -55,6 +56,7 @@ class Utilisateur
 	public function getNom(){return $this->nom;}
 	public function setPrenom($prenom){$this->prenom=$prenom;}
 	public function setNom($nom){$this->nom=$nom;}
+	public function getIsAdmin(){return $this->is_admin;}
 }
 
 class Produit

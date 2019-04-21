@@ -2,54 +2,63 @@
 include("classes.php");
 include("connexion.php");
 
-if(isset($_POST['id']) && isset($_POST['nom']) && isset($_POST['categorie']) 
-    && isset($_POST['prix']))
+if(isset($_COOKIE['auth']) && $_COOKIE['is_admin']==true)
 {
-    //ajout d'un produit
-    $req=$pdo->prepare("select count(id) from produits where id=" . $_POST['id']);
-    $req->execute();
-    $idExistant=$req->fetch()[0];
-    if($idExistant==0)
+    if(isset($_POST['id']) && isset($_POST['nom']) && isset($_POST['categorie']) 
+        && isset($_POST['prix']))
     {
-        //creation
-        //insert into produits values(id,nom,prix,categorie_id)
-        try{
-            $pdo->beginTransaction();
-            $pdo->query("insert into produits values(" . $_POST['id'] . ",'" . 
-                $_POST['nom'] . "'," . $_POST['prix'] . "," . $_POST['categorie'] . ")");
-            $pdo->commit();
+        //ajout d'un produit
+        $req=$pdo->prepare("select count(id) from produits where id=" . $_POST['id']);
+        $req->execute();
+        $idExistant=$req->fetch()[0];
+        if($idExistant==0)
+        {
+            //creation
+            //insert into produits values(id,nom,prix,categorie_id)
+            try{
+                $pdo->beginTransaction();
+                $pdo->query("insert into produits values(" . $_POST['id'] . ",'" . 
+                    $_POST['nom'] . "'," . $_POST['prix'] . "," . $_POST['categorie'] . ")");
+                $pdo->commit();
+            }
+            catch(Exception $e){
+                $pdo->rollback();
+                echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
+                exit();
+            }
         }
-        catch(Exception $e){
-            $pdo->rollback();
-            echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
-            exit();
+        else
+        {
+            //modification
+            //update produits set nom=nom,prix=prix,categorie_id=categorie where id=id
+            try{
+                $pdo->beginTransaction();
+                $pdo->query("update produits set nom='" . $_POST['nom'] . 
+                    "',prix=" . $_POST['prix'] . ",categorie_id=" . $_POST['categorie'] . 
+                    " where id=" . $_POST['id']);
+                $pdo->commit();
+            }
+            catch(Exception $e){
+                $pdo->rollback();
+                echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
+                exit();
+            }
         }
     }
-    else
-    {
-        //modification
-        //update produits set nom=nom,prix=prix,categorie_id=categorie where id=id
-        try{
-            $pdo->beginTransaction();
-            $pdo->query("update produits set nom='" . $_POST['nom'] . 
-                "',prix=" . $_POST['prix'] . ",categorie_id=" . $_POST['categorie'] . 
-                " where id=" . $_POST['id']);
-            $pdo->commit();
-        }
-        catch(Exception $e){
-            $pdo->rollback();
-            echo "Erreur: " . $e->getMessage() . "N° : " . $e->getCode();
-            exit();
-        }
-    }
+
+    $req=$pdo->query("select produits.id,produits.nom,produits.prix,
+        categories.nom as categorie from produits 
+        join categories on produits.categorie_id=categories.id 
+        group by categorie,produits.id order by categorie asc,nom asc");
+    $req->setFetchMode(PDO::FETCH_CLASS,'Produit');
+    $tab=$req->fetchAll();
+}
+else
+{
+    header('Location: index.php');
+    die;
 }
 
-$req=$pdo->query("select produits.id,produits.nom,produits.prix,
-    categories.nom as categorie from produits 
-    join categories on produits.categorie_id=categories.id 
-    group by categorie,produits.id order by categorie asc,nom asc");
-$req->setFetchMode(PDO::FETCH_CLASS,'Produit');
-$tab=$req->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -142,9 +151,10 @@ $tab=$req->fetchAll();
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card w3-left-align w3-large">
     <a href="index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Accueil</a>
-    <a href="tickets.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>
+    <?php echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>';?>
     <a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>
     <a href="produits.php" class="w3-bar-item w3-button w3-padding-large w3-white">Produits</a>
+    <a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>
   </div>
 </div>
 

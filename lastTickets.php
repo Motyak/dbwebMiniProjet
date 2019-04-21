@@ -1,20 +1,28 @@
 <?php
 include("classes.php");
 include("connexion.php");
-if($_GET['type']=="produit")
-    $req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
-        join ticket_entry on ticket_entry.ticket_id=tickets.id 
-        join produits on produits.id=ticket_entry.produit_id 
-        where produits.id=" . $_GET['id'] ." order by date desc limit 3");
-else if($_GET['type']=="categorie")
-    $req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
-        join ticket_entry on ticket_entry.ticket_id=tickets.id 
-        join produits on produits.id=ticket_entry.produit_id
-        join categories on categories.id=categorie_id
-        where categories.nom='" . $_GET['id'] ."' order by date desc limit 3");
+if(isset($_GET['type']) && isset($_GET['id']) && isset($_COOKIE['auth']) && $_COOKIE['is_admin']==true)
+{
+	if($_GET['type']=="produit")
+		$req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
+				join ticket_entry on ticket_entry.ticket_id=tickets.id 
+				join produits on produits.id=ticket_entry.produit_id 
+				where produits.id=" . $_GET['id'] ." order by date desc limit 3");
+	else if($_GET['type']=="categorie")
+		$req=$pdo->query("select tickets.id,date,utilisateur_id from tickets 
+				join ticket_entry on ticket_entry.ticket_id=tickets.id 
+				join produits on produits.id=ticket_entry.produit_id
+				join categories on categories.id=categorie_id
+				where categories.nom='" . $_GET['id'] ."' order by date desc limit 3");
 
-$req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
-$tab=$req->fetchAll();
+	$req->setFetchMode(PDO::FETCH_CLASS,'Ticket');
+	$tab=$req->fetchAll();
+}
+else
+{
+	header('Location: index.php');
+	die;
+}
 ?>
 
 <!DOCTYPE html>
@@ -72,8 +80,9 @@ $(document).ready(function(){
   <div class="w3-bar w3-black w3-card w3-left-align w3-large">
     <a href="index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Accueil</a>
     <a href="tickets.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>
-    <a href="clients.php" class="w3-bar-item w3-button w3-padding-large w3-white">Clients</a>
+    <a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>
     <a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>
+		<a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>
   </div>
 </div>
 
