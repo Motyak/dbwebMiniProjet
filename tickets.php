@@ -42,6 +42,22 @@ $(document).ready(function(){
             $("#btnDetails").text("Afficher détails");
         i++;
     });
+	
+	$("tr").not(':first').hover(
+		function () {
+			if(i%2==0)
+			{
+				$(this).css("background","rgba(192,192,192,0.45)");
+				$(this).css("font-size","24px");
+			}
+		}, 
+		function () {
+			$(this).css("background","");
+			$(this).css("font-size","16px");
+		}
+	);
+	
+
 
 });
 </script>
