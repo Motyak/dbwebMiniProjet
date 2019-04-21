@@ -24,7 +24,37 @@ else
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    // $('#clients thead tr').clone(true).appendTo( '#clients thead' );
+		$('#clients thead tr:nth-child(1),#clients thead tr:nth-child(2),#clients thead tr:nth-child(3)').clone(true).appendTo( '#clients thead' );
+    // $('#clients thead tr:eq(1) th').each( function (i) {
+		$('#clients thead tr:eq(1) th:nth-child(1),#clients thead tr:eq(1) th:nth-child(2),#clients thead tr:eq(1) th:nth-child(3)').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+ 
+    var table = $('#clients').DataTable( {
+        orderCellsTop: true,
+        fixedHeader: true
+    } );
+} );
+</script>
 <style>
     body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
@@ -35,7 +65,6 @@ else
         }	
 
     th, td {
-        /* text-align: left; */
         padding: 8px;
         text-align:center;
         }
@@ -70,8 +99,10 @@ else
 				<th>ID</th>
 				<th>NOM</th>
 				<th>PRENOM</th>
+				<th></th>
 			</tr>
 		</thead>
+		<tbody>
 		<?php 
 		foreach($tab as $user)
 		{
@@ -88,6 +119,7 @@ else
 			"\n\t\t\t</td>\n\t\t</tr>\n\t\t";
 		}
 		?>
+	</tbody>
 	</table>
   </div>
 </div>
