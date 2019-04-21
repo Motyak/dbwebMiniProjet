@@ -56,9 +56,6 @@ $(document).ready(function(){
 			$(this).css("font-size","16px");
 		}
 	);
-	
-
-
 });
 </script>
 <style>

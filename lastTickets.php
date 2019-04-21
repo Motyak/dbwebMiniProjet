@@ -40,20 +40,33 @@ else
 
 $(document).ready(function(){
 
-    var i=0;
+var i=0;
 
-    var colPrix=$('#number').val()
-    $('td:nth-child(3),th:nth-child(3)').hide();
+var colPrix=$('#number').val()
+$('td:nth-child(3),th:nth-child(3)').hide();
 
-    $("#btnDetails").click(function(){ 
-        $('td:nth-child(3),th:nth-child(3)').toggle();
-        if(i%2==0)
-            $("#btnDetails").text("Masquer détails");
-        else
-            $("#btnDetails").text("Afficher détails");
-        i++;
-    });
+$("#btnDetails").click(function(){ 
+		$('td:nth-child(3),th:nth-child(3)').toggle();
+		if(i%2==0)
+				$("#btnDetails").text("Masquer détails");
+		else
+				$("#btnDetails").text("Afficher détails");
+		i++;
+});
 
+$("tr").not(':first').hover(
+function () {
+	if(i%2==0)
+	{
+		$(this).css("background","rgba(192,192,192,0.45)");
+		$(this).css("font-size","35px");
+	}
+}, 
+function () {
+	$(this).css("background","");
+	$(this).css("font-size","16px");
+}
+);
 });
 </script>
 <style>
