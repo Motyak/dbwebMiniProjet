@@ -48,7 +48,7 @@ $(document).ready(function(){
 			if(i%2==0)
 			{
 				$(this).css("background","rgba(192,192,192,0.45)");
-				$(this).css("font-size","24px");
+				$(this).css("font-size","35px");
 			}
 		}, 
 		function () {
