@@ -83,3 +83,78 @@ _____________________________________
 
 FINI
 Pour justifier 'adapter affichage selon taille écran' => utilisation d'un template W3.css mobile-friendly
+
+_________________________________________
+
+
+etat_ventes.php => affiche état des ventes par catégorie et par produit.
+Doit afficher le cumul des ventes (€) pour chaque produit et chaque catégorie.
+Tableau affiche le total des ventes pour chaque produit d'une catégorie, puis le total de la catégorie.
+
+nom produit,prix total,nom categorie,(total categorie)
+
+tableau trié par nom catégorie,puis nom produit
+
+//select produits.nom as nom_produit,sum(quantite*prix) as prix_total,categories.nom as nom_categorie
+	from ticket_entry 
+	join produits on ticket_entry.produit_id=produits.id
+	join categories on produits.categorie_id=categories.id
+	group by nom_categorie,nom_produit
+	order by nom_categorie,nom_produit;
+
+//select categories.nom,sum(quantite*prix) as prix_total_categorie
+	from ticket_entry
+	join produits on ticket_entry.produit_id=produits.id
+	join categories on produits.categorie_id=categories.id
+	group by categories.nom;
+
+//nom_produit,prix_total,nom_categorie,prix_total_categorie
+select nom_produit,prix_total,S.nom_categorie,prix_total_categorie
+from (select produits.nom as nom_produit,sum(quantite*prix) as prix_total,categories.nom as nom_categorie
+	from ticket_entry 
+	join produits on ticket_entry.produit_id=produits.id
+	join categories on produits.categorie_id=categories.id
+	group by nom_categorie,nom_produit
+	order by nom_categorie,nom_produit) as S
+join (select categories.nom as nom_categorie,sum(quantite*prix) as prix_total_categorie
+	from ticket_entry
+	join produits on ticket_entry.produit_id=produits.id
+	join categories on produits.categorie_id=categories.id
+	group by categories.nom) as T
+on S.nom_categorie=T.nom_categorie;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

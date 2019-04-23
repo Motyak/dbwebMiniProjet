@@ -21,7 +21,10 @@ if(isset($_POST['uname']) && isset($_POST['pwd']))
         setcookie("id",$user[0]->getId(),$delay);
         setcookie("nom",$user[0]->getNom(),$delay);
         setcookie("prenom",$user[0]->getPrenom(),$delay);
-        setcookie("is_admin",$user[0]->getIsAdmin(),$delay);
+        if($user[0]->getIsAdmin()==true)
+			setcookie("is_admin","1",$delay);
+        else
+			setcookie("is_admin","0",$delay);
         setcookie("auth",true,$delay);
         header('Location: ' . $_SERVER['PHP_SELF']);
         die;
@@ -130,10 +133,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     if(isset($_COOKIE['auth']))
     {
       echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>';
-      if($_COOKIE['is_admin']==true)
+      if($_COOKIE['is_admin']=='1')
       {
         echo '<a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>';
         echo '<a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>';
+        echo '<a href="etat_ventes.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Etat des ventes</a>';
       }
       echo '<a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>';
     }
@@ -156,7 +160,20 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
-  <?php if(isset($_COOKIE['auth'])) echo 'Bienvenue ',$_COOKIE['nom'],' !'; ?>
+  <?php if(isset($_COOKIE['auth'])) echo '<h2>Bienvenue ',$_COOKIE['nom'],' !</h2>'; ?>
+  <br><br>La page <b>'Mes tickets'</b> est accessible à tous les utilisateurs authentifiés.
+  Elle affiche tous vos tickets avec leur date respective, 
+  vous pouvez afficher le contenu du ticket en cliquant sur le bouton 'Afficher détails'.
+  <br><br>La page <b>'Clients'</b> n'est accessible qu'aux administrateurs.
+  Elle affiche tous les clients avec leur nom et prénom, on peut pour chacun afficher leurs tickets (ainsi que leur contenu respectif).
+  <br><br>La page <b>'Produits'</b> n'est accessible qu'aux administrateurs.
+  Elle affiche l'ensemble des produits avec leur nom et prix unitaire, trié par catégorie.
+  En cliquant sur un produit, on peut afficher les 3 derniers tickets comprenant celui-ci.
+  En cliquant sur une catégorie, les 3 derniers tickets comprenant des produits de cette catégorie seront affichés.
+  Vous avez également la possibilité d'ajouter/modifier un produit de la liste en cliquant sur le bouton 'Ajouter'.
+  <br><br>La page <b>'Etat des ventes'</b> n'est accessible qu'aux administrateurs.
+  Elle affiche un résumé des ventes avec, pour chaque produit, la vente total.
+  Regroupé par catégorie, on affiche également la vente totale pour chaque catégorie.
   </div>
 </div>
 </body>

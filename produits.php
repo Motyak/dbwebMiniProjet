@@ -154,6 +154,7 @@ else
     <?php echo '<a href="tickets.php?id=' . $_COOKIE['id'] . '" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Mes tickets</a>';?>
     <a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>
     <a href="produits.php" class="w3-bar-item w3-button w3-padding-large w3-white">Produits</a>
+    <a href="etat_ventes.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Etat des ventes</a>
     <a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>
   </div>
 </div>

@@ -156,4 +156,22 @@ class Ticket
 	public function setUtilisateur($utilisateur){$this->utilisateur=$utilisateur;}
 	// public function setProduits($produits){$this->produits=$produits;}
 }
+
+class Vente
+{
+	private $nom_produit;
+	private $prix_total;
+	private $nom_categorie;
+	private $prix_total_categorie;
+	
+	public function __toString()
+	{
+		return '(' . $this->nom_produit . ';' . $this->prix_total . ';' . $this->nom_categorie . ';' . $this->prix_total_categorie . ')'; 
+	}
+	
+	public function getNomProduit(){return $this->nom_produit;}
+	public function getPrixTotal(){return $this->prix_total;}
+	public function getNomCategorie(){return $this->nom_categorie;}
+	public function getPrixTotalCategorie(){return $this->prix_total_categorie;}
+}
 ?>

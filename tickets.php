@@ -90,6 +90,7 @@ $(document).ready(function(){
     {
         echo '<a href="clients.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Clients</a>';
         echo '<a href="produits.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Produits</a>';
+        echo '<a href="etat_ventes.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Etat des ventes</a>';
 		}
 		?>
 		<a href="index.php?logout" class="w3-bar-item w3-button w3-padding-large w3-red w3-right">Log out</a>
